@@ -20,7 +20,7 @@ dotenv.config({ path: envPath });
 const config = {
   port: process.env.PORT || 8080,
   mode: env,
-  mongo_url: process.env.MONGO_URI,
+  mongo_uri: process.env.MONGO_URI,
   secret_key: process.env.SECRET_KEY || "default_secret",
 };
 

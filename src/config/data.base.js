@@ -3,15 +3,15 @@ import config from "./config.js";
 
 export const connectToDB = async () => {
   if (config.mode === "test") {
-    console.log("[DB] Skipping connection in test mode");
+    console.log("[DB] Omitir conexión en modo de prueba");
     return;
   }
 
   try {
     await mongoose.connect(config.mongo_uri);
-    console.info(`[DB] Connected to MongoDB`);
+    console.info(`[DB] MongoDB Conectado`);
   } catch (error) {
-    console.error(`[DB] Connection failed: ${error.message}`);
-    throw new Error(`MongoDB connection error: ${error.message}`);
+    console.error(`[DB] Conexión fallida: ${error.message}`);
+    throw new Error(`Erro de conexión de MongoDB: ${error.message}`);
   }
 };
