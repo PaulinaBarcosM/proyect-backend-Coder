@@ -27,7 +27,6 @@ const getProductById = async (req, res, next) => {
   }
 };
 
-//
 const createProduct = async (req, res, next) => {
   try {
     const product = req.body;
