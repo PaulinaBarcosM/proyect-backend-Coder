@@ -51,12 +51,52 @@ export default class ProductsService {
     return product;
   }
 
-  async createProduct(producData) {
-    return await this.repository.createProduct(producData);
+  async createProduct(productData) {
+    //que no falten campos importantes para crear productos
+    const requieredField = [
+      "title",
+      "description",
+      "price",
+      "code",
+      "stock",
+      "category",
+    ];
+
+    const missingFields = requieredField.filter((field) => !productData[field]);
+
+    if (missingFields.length > 0) {
+      throw new Error(
+        `Faltan campos obligatorios: ${missingFields.join(", ")}`
+      );
+    }
+
+    if (typeof productData.price !== "number" || productData.price < 0) {
+      throw new Error("El precio debe ser un número válido y positivo");
+    }
+
+    if (!Number.isInteger(productData.stock) || productData.stock < 0) {
+      throw new Error("El stock deber ser un número entero positivo");
+    }
+
+    return await this.repository.createProduct(productData);
   }
 
-  async updateProduct(pid, producData) {
-    const updated = await this.repository.updateProduct(pid, producData);
+  async updateProduct(pid, productData) {
+    if (
+      productData.price !== undefined &&
+      (typeof productData.price !== "number" || productData.price < 0)
+    ) {
+      throw new Error("El precio debe ser un número válido y positivo");
+    }
+
+    if (
+      productData.stock !== undefined &&
+      (!Number.isInteger(productData.stock) || productData.stock < 0)
+    ) {
+      throw new Error("El stock debe ser un número entero positivo");
+    }
+
+    const updated = await this.repository.updateProduct(pid, productData);
     if (!updated) throw new Error("No se encontro el producto para actualizar");
     return updated;
   }
