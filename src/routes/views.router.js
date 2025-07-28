@@ -94,21 +94,4 @@ router.post("/products/delete/:id", async (req, res) => {
   }
 });
 
-// ruta para carrito
-// vista de  carritos
-router.get("/cart/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const cart = await cartService.getCartById(id);
-    console.log(cart.products);
-    if (!cart || !cart.products) {
-      return res.status(404).render("error", { message: "Cart not found" });
-    }
-    res.render("cart", { layout: "main", cart });
-  } catch (error) {
-    console.error("Error loading cart view:", error);
-    res.status(500).send("Error loading cart page");
-  }
-});
-
 export default router;

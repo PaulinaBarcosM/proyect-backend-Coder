@@ -2,7 +2,7 @@ import express from "express";
 import productsRouter from "../src/routes/product.router.js";
 import cartsRouter from "../src/routes/cart.router.js";
 import viewsRouter from "../src/routes/views.router.js";
-import handlebars from "express-handlebars";
+import { engine } from "express-handlebars";
 import path from "path";
 import config, { __dirname } from "./config/config.js";
 import productController from "../src/controllers/product.controller.js";
@@ -16,26 +16,25 @@ const app = express();
 
 app.use(express.json());
 
-// Configurar motor de vistas Handlebars con helpers
 app.engine(
   "handlebars",
-  handlebars.engine({
-    helpers: hbsHelpers,
+  engine({
+    runtimeOptions: {
+      allowProtoPropertiesByDefault: true,
+      allowProtoMethodsByDefault: true,
+    },
+    helpers: {
+      eq: (a, b) => a === b,
+      multiply: (a, b) => a * b,
+      calculateTotal: (products) => {
+        return products.reduce(
+          (total, item) => total + item.product.price * item.quantity,
+          0
+        );
+      },
+    },
   })
 );
-// Helpers para multiplicacion y total del carrito
-const hbsHelpersCart = {
-  eq: (a, b) => a === b,
-
-  multiply: (a, b) => a * b,
-
-  calculateTotal: (products) => {
-    return products.reduce(
-      (total, item) => total + item.product.price * item.quantity,
-      0
-    );
-  },
-};
 
 // motor de vistas
 app.set("view engine", "handlebars");

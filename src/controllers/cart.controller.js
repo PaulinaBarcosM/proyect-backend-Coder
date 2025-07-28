@@ -4,6 +4,7 @@ import CartDAO from "../dao/cart.dao.js";
 
 const cartsService = new CartService(new CartRepository(new CartDAO()));
 
+// Obtener todos los carritos
 const getAllCarts = async (req, res) => {
   try {
     const carts = await cartsService.getAllCarts();
@@ -13,6 +14,7 @@ const getAllCarts = async (req, res) => {
   }
 };
 
+// Obtener carrito por id
 const getCartById = async (req, res) => {
   try {
     const cid = req.params.cid;
@@ -23,15 +25,17 @@ const getCartById = async (req, res) => {
   }
 };
 
+// Crear carrito vacío
 const createCart = async (req, res) => {
   try {
-    const newCart = await cartsService.createCart({});
+    const newCart = await cartsService.createCart({ products: [] });
     res.status(201).json({ status: "success", payload: newCart });
   } catch (error) {
     res.status(500).json({ status: "error", error: error.message });
   }
 };
 
+// Actualizar carrito completo (productos)
 const updateCart = async (req, res) => {
   try {
     const cid = req.params.cid;
@@ -52,6 +56,7 @@ const updateCart = async (req, res) => {
   }
 };
 
+// Eliminar carrito
 const deleteCart = async (req, res) => {
   try {
     const cid = req.params.cid;
@@ -103,11 +108,11 @@ const clearCart = async (req, res) => {
   }
 };
 
-//view carrito
+// Renderizar vista carrito con handlebars
 const getCartView = async (req, res) => {
   try {
     const { cid } = req.params;
-    const cart = await cartService.getCartById(cid);
+    const cart = await cartsService.getCartById(cid);
     res.render("cart", { layout: "main", cart });
   } catch (error) {
     console.error(error);

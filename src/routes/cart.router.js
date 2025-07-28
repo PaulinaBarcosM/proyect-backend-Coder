@@ -13,4 +13,7 @@ router.put("/:cid/products/:pid", cartController.updateProductQuantity);
 router.delete("/:cid/products/:pid", cartController.deleteProductFromCart);
 router.delete("/:cid/products", cartController.clearCart);
 
+//vista carrito
+router.get("/view/:cid", cartController.getCartView);
+
 export default router;

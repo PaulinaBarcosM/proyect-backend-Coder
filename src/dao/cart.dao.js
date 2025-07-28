@@ -1,12 +1,16 @@
 import CartModel from "../models/cart.model.js";
 
 export default class CartDAO {
-  async getAll() {
-    return await CartModel.find().populate("products.product");
+  async getAllCarts() {
+    return await CartModel.find();
   }
 
-  async getById(cid) {
-    return await CartModel.findById(cid).populate("products.product").lean();
+  async getCartById(cid) {
+    return await CartModel.findById(cid).populate({
+      path: "products.product",
+      select: "title price description stock category thumbnails",
+      populate: { path: "category", select: "name" },
+    });
   }
 
   async createCart(cartData) {
