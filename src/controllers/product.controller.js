@@ -145,7 +145,8 @@ const seedProducts = async (req, res) => {
 // VIEWS
 const getHomeView = async (req, res) => {
   try {
-    const products = await productsService.getProducts({});
+    const result = await productsService.getProducts({});
+    const products = result.docs || result.payload || [];
     res.render("home", { layout: "main", products });
   } catch (error) {
     console.error("Error al cargar la página de inicio:", error);

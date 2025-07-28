@@ -45,6 +45,7 @@ router.get("/products/details/:id", async (req, res) => {
     res.render("productDetails", {
       layout: "main",
       product,
+      cartId: "64faaaec7f121b00e0d302a1",
     });
   } catch (error) {
     console.error("Error al cargar los detalles del producto:", error);

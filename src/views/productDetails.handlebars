@@ -1,0 +1,166 @@
+<h1>{{product.title}}</h1>
+
+<p><strong>Description:</strong> {{product.description}}</p>
+<p><strong>Price:</strong> ${{product.price}}</p>
+<p><strong>Category:</strong> {{product.category}}</p>
+<p><strong>Stock:</strong> {{product.stock}}</p>
+
+{{#if product.thumbnails.length}}
+{{#each product.thumbnails}}
+{{#if this}}
+<div class="image-container">
+    <img src="{{this}}" alt="Product image" width="200" />
+</div>
+{{/if}}
+{{/each}}
+{{else}}
+<img src="/img/default-placeholder.webp" alt="No image available" width="200" />
+{{/if}}
+
+<hr />
+
+<h2>Edit Product</h2>
+<form action="/views/products/update/{{product._id}}" method="POST">
+    <label for="title">Title:</label>
+    <input type="text" name="title" id="title" value="{{product.title}}" required />
+
+    <label for="price">Price:</label>
+    <input type="number" name="price" id="price" value="{{product.price}}" required />
+
+    <label for="stock">Stock:</label>
+    <input type="number" name="stock" id="stock" value="{{product.stock}}" required />
+
+    <label for="category">Category:</label>
+    <input type="text" name="category" id="category" value="{{product.category}}" required />
+
+    <button type="submit" class="styled-button">Update</button>
+</form>
+
+<hr />
+
+<h2>Delete Product</h2>
+<form id="deleteProductForm">
+    <button type="submit" class="styled-button delete">Delete Product</button>
+</form>
+
+<hr />
+
+<h2>Add to Cart</h2>
+<form id="addToCartForm">
+    <label for="quantity">Quantity:</label>
+    <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{product.stock}}" required />
+    <button type="submit" class="styled-button">Add to Cart</button>
+</form>
+
+<hr />
+
+<h2>Remove from Cart</h2>
+<form onsubmit="event.preventDefault(); removeFromCart('{{cartId}}', '{{product._id}}')">
+    <button type="submit" class="styled-button">Remove from Cart</button>
+</form>
+
+<a href="/views/products/view" class="styled-button back-button">← Back to Products</a>
+
+<hr />
+
+<h2>Upload Product Image</h2>
+<form action="/views/products/{{product._id}}/upload" method="POST" enctype="multipart/form-data">
+    <input type="file" name="image" required />
+    <button type="submit" class="styled-button">Upload Image</button>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Add to Cart
+    document.getElementById("addToCartForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const cartId = "{{cartId}}";
+        const productId = "{{product._id}}";
+        const quantity = document.getElementById("quantity").value;
+
+        try {
+            const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ quantity: parseInt(quantity) })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                Swal.fire("Success", data.message || "Product added to cart!", "success").then(() => {
+                    window.location.href = `/views/cart/${cartId}`;
+                });
+            } else {
+                Swal.fire("Error", data.error || "Could not add product.", "error");
+            }
+        } catch (error) {
+            console.error("Fetch Error:", error);
+            Swal.fire("Error", "Something went wrong.", "error");
+        }
+    });
+
+    // Delete Product
+    document.getElementById("deleteProductForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const productId = "{{product._id}}";
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This action cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await fetch(`/products/delete/${productId}`, { method: "DELETE" });
+
+                if (response.ok) {
+                    Swal.fire("Deleted!", "Product removed.", "success").then(() => {
+                        window.location.href = "/views/products/view";
+                    });
+                } else {
+                    Swal.fire("Error", "Could not delete product.", "error");
+                }
+            } catch (error) {
+                Swal.fire("Error", "Something went wrong.", "error");
+            }
+        });
+    });
+
+    // Success messages
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("success")) {
+        const code = urlParams.get("success");
+        const message =
+            code === "1"
+                ? "Image uploaded successfully!"
+                : code === "2"
+                    ? "Product updated successfully!"
+                    : "Operation successful!";
+
+        Swal.fire("Success", message, "success").then(() => {
+            window.history.replaceState(null, "", window.location.pathname);
+        });
+    }
+
+    // Remove from cart
+    async function removeFromCart(cartId, productId) {
+        try {
+            const response = await fetch(`/cart/${cartId}/products/${productId}`, {
+                method: "DELETE"
+            });
+
+            if (response.ok) {
+                Swal.fire("Removed!", "Product removed from cart.", "success").then(() => {
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire("Error", "Failed to remove product from cart.", "error");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+</script>

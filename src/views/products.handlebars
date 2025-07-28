@@ -1,0 +1,61 @@
+<h1 class="main-title">Product List</h1>
+
+<form action="/views/products/view" method="GET" class="filters-form">
+    <div class="form-group">
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category" class="input-select" />
+    </div>
+
+    <div class="form-group">
+        <label for="price">Max Price:</label>
+        <input type="number" id="price" name="price" class="input-select" />
+    </div>
+
+    <div class="form-group">
+        <label for="stock">Min Stock:</label>
+        <input type="number" id="stock" name="stock" class="input-select" />
+    </div>
+
+    <div class="form-group">
+        <label for="sort">Sort by:</label>
+        <select id="sort" name="sort" class="input-select">
+            <option value="">Select</option>
+            <option value="asc">Price (Low to High)</option>
+            <option value="desc">Price (High to Low)</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="styled-button">Apply Filters</button>
+    </div>
+</form>
+
+<ul id="productList">
+    {{#each products}}
+    <li class="product-card">
+        <h3>{{this.title}}</h3>
+        <p><strong>${{this.price}}</strong></p>
+        <p>{{this.description}}</p>
+        <p><strong>Stock:</strong> {{this.stock}} units</p>
+        <p><strong>Category:</strong> {{this.category}}</p>
+        {{#if this.thumbnails.length}}
+        <img src="{{this.thumbnails.[0]}}" alt="Product image"
+            style="max-width: 100%; height: auto; margin-top: 10px;" />
+        {{else}}
+        <img src="/img/default-placeholder.webp" alt="No image"
+            style="max-width: 100%; height: auto; margin-top: 10px;" />
+        {{/if}}
+        <a href="/views/products/details/{{this._id}}" class="styled-button" style="margin-top: 10px;">View Details</a>
+    </li>
+    {{/each}}
+</ul>
+
+<div class="pagination">
+    {{#if hasPrevPage}}
+    <a href="?page={{prevPage}}" class="styled-button">Previous</a>
+    {{/if}}
+    <span>Page {{currentPage}} of {{totalPages}}</span>
+    {{#if hasNextPage}}
+    <a href="?page={{nextPage}}" class="styled-button">Next</a>
+    {{/if}}
+</div>
