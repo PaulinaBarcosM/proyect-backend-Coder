@@ -1,8 +1,10 @@
 import express from "express";
 import ProductsService from "../services/product.service.js";
+import CartService from "../services/cart.service.js";
 
 const router = express.Router();
 const productsService = new ProductsService();
+const cartService = new CartService();
 
 // Vista paginada de prodcutos con filtros y paginación
 router.get("/products/view", async (req, res) => {
@@ -89,6 +91,23 @@ router.post("/products/delete/:id", async (req, res) => {
   } catch (error) {
     console.error("Error al eliminar el producto:", error);
     res.status(500).send("Error al eliminar el producto");
+  }
+});
+
+// ruta para carrito
+// vista de  carritos
+router.get("/cart/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cart = await cartService.getCartById(id);
+    console.log(cart.products);
+    if (!cart || !cart.products) {
+      return res.status(404).render("error", { message: "Cart not found" });
+    }
+    res.render("cart", { layout: "main", cart });
+  } catch (error) {
+    console.error("Error loading cart view:", error);
+    res.status(500).send("Error loading cart page");
   }
 });
 

@@ -6,7 +6,7 @@ export default class CartDAO {
   }
 
   async getById(cid) {
-    return await CartModel.findById(cid).populate("products.product");
+    return await CartModel.findById(cid).populate("products.product").lean();
   }
 
   async createCart(cartData) {

@@ -23,6 +23,19 @@ app.engine(
     helpers: hbsHelpers,
   })
 );
+// Helpers para multiplicacion y total del carrito
+const hbsHelpersCart = {
+  eq: (a, b) => a === b,
+
+  multiply: (a, b) => a * b,
+
+  calculateTotal: (products) => {
+    return products.reduce(
+      (total, item) => total + item.product.price * item.quantity,
+      0
+    );
+  },
+};
 
 // motor de vistas
 app.set("view engine", "handlebars");

@@ -103,6 +103,18 @@ const clearCart = async (req, res) => {
   }
 };
 
+//view carrito
+const getCartView = async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const cart = await cartService.getCartById(cid);
+    res.render("cart", { layout: "main", cart });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error cargando el carrito");
+  }
+};
+
 export default {
   getAllCarts,
   getCartById,
@@ -112,4 +124,5 @@ export default {
   updateProductQuantity,
   deleteProductFromCart,
   clearCart,
+  getCartView,
 };
