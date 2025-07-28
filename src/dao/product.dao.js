@@ -20,4 +20,19 @@ export default class ProductsDAO {
   async delete(id) {
     return await ProductModel.findByIdAndDelete(id);
   }
+
+  // Método paginado con filtros específicos
+  async getPaginated({ limit = 10, page = 1, sort, category, status }) {
+    const query = {};
+    if (category) query.category = category;
+    if (status) query.status = status;
+
+    const options = {
+      page: parseInt(page),
+      limit: parseInt(limit),
+      sort: sort ? { price: sort === "asc" ? 1 : -1 } : undefined,
+    };
+
+    return await ProductModel.paginate(query, options);
+  }
 }

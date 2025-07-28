@@ -7,6 +7,10 @@ export default class ProductsRepository {
     return await productsDAO.getAll(filter, options);
   }
 
+  async getProductsPaginated(params) {
+    return await productsDAO.getProductsPaginated(params);
+  }
+
   async getProductById(id) {
     return await productsDAO.getById(id);
   }

@@ -1,5 +1,4 @@
 import ProductsService from "../services/product.service.js";
-import ProductModel from "../models/product.model.js";
 
 const productsService = new ProductsService();
 
@@ -146,7 +145,7 @@ const seedProducts = async (req, res) => {
 // VIEWS
 const getHomeView = async (req, res) => {
   try {
-    const products = await productsService.find();
+    const products = await productsService.getProducts({});
     res.render("home", { layout: "main", products });
   } catch (error) {
     console.error("Error al cargar la página de inicio:", error);

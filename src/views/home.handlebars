@@ -1,0 +1,10 @@
+<h1>¡Hola desde Handlebars!</h1>
+<p>Bienvenidos a la página principal</p>
+
+<h2>Lista de productos</h2>
+
+<ul>
+    {{#each products.payload}}
+    <li>{{this.title}} - ${{this.price}}</li>
+    {{/each}}
+</ul>
