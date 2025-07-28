@@ -32,6 +32,7 @@ app.set("views", path.join(__dirname, "..", "views"));
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/views", viewsRouter);
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 app.get("/", productController.getHomeView);
 

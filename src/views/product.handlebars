@@ -1,0 +1,79 @@
+<h1 class="main-title">Product List</h1>
+
+<form action="/views/products/view" method="GET" class="filters-form">
+    <!-- CATEGORÍA -->
+    <label for="category">Category Filter:</label>
+    <select name="category" id="category" class="input-select">
+        <option value="">All</option>
+        {{#each categories}}
+        <option value="{{this}}" {{#if (eq this ../category)}}selected{{/if}}>{{this}}</option>
+        {{/each}}
+    </select>
+
+    <!-- ORDENAMIENTO -->
+    <label for="sort">Sort by Price:</label>
+    <select name="sort" id="sort" class="input-select">
+        <option value="">None</option>
+        <option value="asc" {{#if (eq sort "asc" )}}selected{{/if}}>Low to High</option>
+        <option value="desc" {{#if (eq sort "desc" )}}selected{{/if}}>High to Low</option>
+    </select>
+
+    <!-- DISPONIBILIDAD -->
+    <label for="inStock">Availability:</label>
+    <select name="inStock" id="inStock" class="input-select">
+        <option value="">All</option>
+        <option value="true" {{#if (eq inStock "true" )}}selected{{/if}}>In Stock</option>
+        <option value="false" {{#if (eq inStock "false" )}}selected{{/if}}>Out of Stock</option>
+    </select>
+
+    <!-- FILTROS DE PRECIO -->
+    <div class="filters-container">
+        <label for="minPrice">Min Price:</label>
+        <input type="number" name="minPrice" id="minPrice" value="{{minPrice}}" class="input-text" placeholder="0" />
+
+        <label for="maxPrice">Max Price:</label>
+        <input type="number" name="maxPrice" id="maxPrice" value="{{maxPrice}}" class="input-text"
+            placeholder="1000000" />
+    </div>
+
+    <button type="submit" class="styled-button">Apply Filters</button>
+</form>
+
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each products}}
+        <tr>
+            <td>{{this.title}}</td>
+            <td>{{this.description}}</td>
+            <td>${{this.price}}</td>
+            <td>{{this.category}}</td>
+            <td>{{this.stock}}</td>
+            <td>
+                <a href="/views/products/details/{{this._id}}" class="link-details">View details</a>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<div class="pagination">
+    {{#if hasPrevPage}}
+    <a href="{{prevLink}}" class="pagination-link">Previous</a>
+    {{/if}}
+
+    <span class="pagination-info">Page {{page}} of {{totalPages}}</span>
+
+    {{#if hasNextPage}}
+    <a href="{{nextLink}}" class="pagination-link">Next</a>
+    {{/if}}
+</div>
