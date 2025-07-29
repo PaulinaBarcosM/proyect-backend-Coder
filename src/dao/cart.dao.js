@@ -56,4 +56,21 @@ export default class CartDAO {
     await cart.save();
     return cart.populate("products.product");
   }
+
+  async addProduct(cid, pid, quantity = 1) {
+    const cart = await CartModel.findById(cid);
+    if (!cart) throw new Error("Carrito no encontrado");
+
+    const existingProduct = cart.products.find(
+      (item) => item.product.toString() === pid
+    );
+
+    if (existingProduct) {
+      existingProduct.quantity += quantity;
+    } else {
+      cart.products.push({ product: pid, quantity });
+    }
+
+    return await cart.save();
+  }
 }

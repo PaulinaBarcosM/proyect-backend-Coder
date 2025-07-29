@@ -34,4 +34,8 @@ export default class CartRepository {
   async clearCart(cid) {
     return await cartDAO.clearCart(cid);
   }
+
+  async addProduct(cid, pid, quantity = 1) {
+    return await cartDAO.addProduct(cid, pid, quantity);
+  }
 }
