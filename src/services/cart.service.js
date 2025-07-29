@@ -1,3 +1,5 @@
+import ProductModel from "../models/product.model.js";
+
 export default class CartService {
   constructor(repository) {
     this.repository = repository;
@@ -54,5 +56,38 @@ export default class CartService {
     const clearedCart = await this.repository.clearCart(cid);
     if (!clearedCart) throw new Error("No se pudo vaciar el carrito");
     return clearedCart;
+  }
+
+  async addProduct(cartId, productId) {
+    // Obtener el carrito
+    const cart = await this.repository.getCartById(cartId);
+    if (!cart) throw new Error("Carrito no encontrado");
+
+    // Verificar si el producto existe
+    const product = await ProductModel.getById(productId);
+    if (!product) throw new Error("Producto no encontrado");
+
+    // Verificar stock
+    const productIndex = cart.products.findIndex(
+      (p) => p.product.toString() === productId
+    );
+
+    if (productIndex !== -1) {
+      const currentQty = cart.products[productIndex].quantity;
+
+      if (product.stock <= currentQty) {
+        throw new Error("No hay suficiente stock para agregar más unidades");
+      }
+
+      cart.products[productIndex].quantity += 1;
+    } else {
+      if (product.stock < 1) {
+        throw new Error("Producto sin stock disponible");
+      }
+
+      cart.products.push({ product: productId, quantity: 1 });
+    }
+
+    return await cart.save();
   }
 }

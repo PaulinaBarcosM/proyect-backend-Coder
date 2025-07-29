@@ -120,6 +120,23 @@ const getCartView = async (req, res) => {
   }
 };
 
+//agregamos un producto al carrito
+const addProductToCart = async (req, res) => {
+  const { cid, pid } = req.params;
+  const { quantity = 1 } = req.body;
+
+  try {
+    const updatedCart = await cartsService.addProduct(cid, pid, quantity);
+    res.status(200).json({
+      message: "Producto agregado al carrito correctamente",
+      cart: updatedCart,
+    });
+  } catch (error) {
+    console.error("Error al agregar producto al carrito:", error.message);
+    res.status(500).json({ error: "Error al agregar producto al carrito" });
+  }
+};
+
 export default {
   getAllCarts,
   getCartById,
@@ -130,4 +147,5 @@ export default {
   deleteProductFromCart,
   clearCart,
   getCartView,
+  addProductToCart,
 };

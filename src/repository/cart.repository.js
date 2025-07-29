@@ -8,7 +8,7 @@ export default class CartRepository {
   }
 
   async getCartById(cid) {
-    return await cartDAO.getById(cid);
+    return await cartDAO.getCartById(cid);
   }
 
   async createCart(cartData) {
