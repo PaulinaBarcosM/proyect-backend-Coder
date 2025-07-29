@@ -1,10 +1,26 @@
 import express from "express";
 import ProductsService from "../services/product.service.js";
 import CartService from "../services/cart.service.js";
+import CartModel from "../models/cart.model.js";
 
 const router = express.Router();
 const productsService = new ProductsService();
-const cartService = new CartService();
+const cartsService = new CartService();
+
+// vista de  carritos
+router.get("/cart/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const cart = await CartModel.findById(cid).populate("products.product");
+    if (!cart) {
+      return res.status(404).render("error", { message: "Cart not found" });
+    }
+    res.render("cart", { layout: "main", cart });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error loading cart view");
+  }
+});
 
 // Vista paginada de prodcutos con filtros y paginación
 router.get("/products/view", async (req, res) => {
