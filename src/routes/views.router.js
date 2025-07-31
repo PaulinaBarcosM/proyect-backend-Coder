@@ -1,13 +1,28 @@
 import express from "express";
 import ProductsService from "../services/product.service.js";
-import CartService from "../services/cart.service.js";
 import CartModel from "../models/cart.model.js";
 
 const router = express.Router();
 const productsService = new ProductsService();
-const cartsService = new CartService();
 
 // vista de  carritos
+router.get("/cart", async (req, res) => {
+  try {
+    const cart = await CartModel.findOne();
+
+    if (!cart) {
+      return res
+        .status(404)
+        .render("error", { message: "No hay carritos disponibles" });
+    }
+
+    res.redirect(`/views/cart/${cart._id}`);
+  } catch (error) {
+    console.error("Error al redirigir al carrito:", error);
+    res.status(500).send("Error al cargar el carrito");
+  }
+});
+
 router.get("/cart/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
@@ -17,8 +32,8 @@ router.get("/cart/:cid", async (req, res) => {
     }
     res.render("cart", { layout: "main", cart });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error loading cart view");
+    console.error("Error loading cart view:", error);
+    res.status(500).send("Error interno del servidor: loading cart view");
   }
 });
 

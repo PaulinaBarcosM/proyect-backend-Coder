@@ -15,7 +15,4 @@ router.delete("/:cid/products", cartController.clearCart);
 //ruta para agregar un producto al carrito
 router.post("/:cid/products/:pid", cartController.addProductToCart);
 
-//vista carrito
-router.get("/view/:cid", cartController.getCartView);
-
 export default router;
