@@ -1,13 +1,13 @@
 <main class="cart-container">
-    <h2>Your Shopping Cart</h2>
+    <h2>Tu carrito de compras</h2>
 
     {{#if cart.products.length}}
     <table>
         <thead>
             <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
                 <th>Total</th>
                 <th>Actions</th>
             </tr>
@@ -20,7 +20,7 @@
                 <td>{{this.quantity}}</td>
                 <td>${{multiply this.product.price this.quantity}}</td>
                 <td>
-                    <button onclick="removeFromCart('{{../cart._id}}', '{{this.product._id}}')">Remove</button>
+                    <button onclick="removeFromCart('{{../cart._id}}', '{{this.product._id}}')">Eliminar</button>
                 </td>
             </tr>
             {{/each}}
