@@ -36,16 +36,16 @@
         <h3>{{this.title}}</h3>
         <p><strong>${{this.price}}</strong></p>
         <p>{{this.description}}</p>
-        <p><strong>Stock:</strong> {{this.stock}} units</p>
+        <p><strong>Stock:</strong> {{this.stock}} unidades</p>
         <p><strong>Categoria:</strong> {{this.category}}</p>
         {{#if this.thumbnails.length}}
-        <img src="{{this.thumbnails.[0]}}" alt="Product image"
+        <img src="{{this.thumbnails.[0]}}" alt="Imagen del producto"
             style="max-width: 100%; height: auto; margin-top: 10px;" />
         {{else}}
-        <img src="/img/default-placeholder.webp" alt="No image"
+        <img src="/img/default-placeholder.webp" alt="No imagen"
             style="max-width: 100%; height: auto; margin-top: 10px;" />
         {{/if}}
-        <a href="/views/products/details/{{this._id}}" class="styled-button" style="margin-top: 10px;">View Details</a>
+        <a href="/views/products/details/{{this._id}}" class="styled-button" style="margin-top: 10px;">Ver detalles</a>
     </li>
     {{/each}}
 </ul>
@@ -55,7 +55,7 @@
     <a href="?page={{pagination.prevPage}}" class="styled-button">Anterior</a>
     {{/if}}
 
-    <span>Page {{pagination.page}} of {{pagination.totalPages}}</span>
+    <span>Pagina {{pagination.page}} de {{pagination.totalPages}}</span>
 
     {{#if pagination.hasNextPage}}
     <a href="?page={{pagination.nextPage}}" class="styled-button">Siguiente</a>
