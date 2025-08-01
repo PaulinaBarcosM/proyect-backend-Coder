@@ -2,31 +2,31 @@
 
 <form action="/views/products/view" method="GET" class="filters-form">
     <div class="form-group">
-        <label for="category">Category:</label>
+        <label for="category">Categoría:</label>
         <input type="text" id="category" name="category" class="input-select" />
     </div>
 
     <div class="form-group">
-        <label for="price">Max Price:</label>
+        <label for="price">Precio máximo:</label>
         <input type="number" id="price" name="price" class="input-select" />
     </div>
 
     <div class="form-group">
-        <label for="stock">Min Stock:</label>
+        <label for="stock">Stock mínimo:</label>
         <input type="number" id="stock" name="stock" class="input-select" />
     </div>
 
     <div class="form-group">
-        <label for="sort">Sort by:</label>
+        <label for="sort">Ordenar por:</label>
         <select id="sort" name="sort" class="input-select">
-            <option value="">Select</option>
-            <option value="asc">Price (Low to High)</option>
-            <option value="desc">Price (High to Low)</option>
+            <option value="">Seleccionar</option>
+            <option value="asc">Precio (de menor a mayor)</option>
+            <option value="desc">Price (de mayor a menor)</option>
         </select>
     </div>
 
     <div class="form-group">
-        <button type="submit" class="styled-button">Apply Filters</button>
+        <button type="submit" class="styled-button">Aplicar filtros</button>
     </div>
 </form>
 
@@ -37,7 +37,7 @@
         <p><strong>${{this.price}}</strong></p>
         <p>{{this.description}}</p>
         <p><strong>Stock:</strong> {{this.stock}} units</p>
-        <p><strong>Category:</strong> {{this.category}}</p>
+        <p><strong>Categoria:</strong> {{this.category}}</p>
         {{#if this.thumbnails.length}}
         <img src="{{this.thumbnails.[0]}}" alt="Product image"
             style="max-width: 100%; height: auto; margin-top: 10px;" />
@@ -51,11 +51,13 @@
 </ul>
 
 <div class="pagination">
-    {{#if hasPrevPage}}
-    <a href="?page={{prevPage}}" class="styled-button">Previous</a>
+    {{#if pagination.hasPrevPage}}
+    <a href="?page={{pagination.prevPage}}" class="styled-button">Anterior</a>
     {{/if}}
-    <span>Page {{currentPage}} of {{totalPages}}</span>
-    {{#if hasNextPage}}
-    <a href="?page={{nextPage}}" class="styled-button">Next</a>
+
+    <span>Page {{pagination.page}} of {{pagination.totalPages}}</span>
+
+    {{#if pagination.hasNextPage}}
+    <a href="?page={{pagination.nextPage}}" class="styled-button">Siguiente</a>
     {{/if}}
 </div>

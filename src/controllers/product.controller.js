@@ -145,12 +145,35 @@ const seedProducts = async (req, res) => {
 // VIEWS
 const getHomeView = async (req, res) => {
   try {
-    const result = await productsService.getProducts({});
-    const products = result.docs || result.payload || [];
-    res.render("home", { layout: "main", products });
+    const { limit, page, sort, query } = req.query;
+
+    const {
+      payload: products,
+      totalPages,
+      prevPage,
+      nextPage,
+      page: currentPage,
+      hasPrevPage,
+      hasNextPage,
+      prevLink,
+      nextLink,
+    } = await productsService.getProducts({ limit, page, sort, query });
+
+    res.render("home", {
+      title: "Home | Productos",
+      products,
+      totalPages,
+      prevPage,
+      nextPage,
+      currentPage,
+      hasPrevPage,
+      hasNextPage,
+      prevLink,
+      nextLink,
+    });
   } catch (error) {
-    console.error("Error al cargar la página de inicio:", error);
-    res.status(500).send("Error al cargar la página de incio");
+    req.logger.error("Error al obtener productos:", error);
+    res.status(500).send("Error interno del servidor");
   }
 };
 
@@ -285,6 +308,43 @@ const getPaginationOptions = (req) => ({
       : undefined,
 });
 
+//vista con paginación y filtros
+const getProductsView = async (req, res) => {
+  try {
+    const { limit = 10, page = 1, sort, category, price, stock } = req.query;
+
+    const query = {};
+    if (category) query.category = category;
+    if (price) query.price = { $lte: price };
+    if (stock) query.stock = { $gte: stock };
+
+    const options = {
+      limit: parseInt(limit),
+      page: parseInt(page),
+      sort: sort ? { price: sort === "asc" ? 1 : -1 } : undefined,
+      lean: true,
+    };
+
+    const result = await productsService.getProducts(query, options);
+
+    res.render("products", {
+      layout: "main",
+      products: result.docs,
+      pagination: {
+        totalPages: result.totalPages,
+        page: result.page,
+        hasPrevPage: result.hasPrevPage,
+        hasNextPage: result.hasNextPage,
+        prevPage: result.prevPage,
+        nextPage: result.nextPage,
+      },
+    });
+  } catch (error) {
+    console.error("Error al cargar la vista de productos:", error);
+    res.status(500).send("Error interno al cargar productos.");
+  }
+};
+
 export default {
   getProducts,
   getProductById,
@@ -300,4 +360,5 @@ export default {
   uploadProductImage,
   parseFilters,
   getPaginationOptions,
+  getProductsView,
 };
