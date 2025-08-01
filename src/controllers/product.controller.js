@@ -337,6 +337,8 @@ const getProductsView = async (req, res) => {
         hasNextPage: result.hasNextPage,
         prevPage: result.prevPage,
         nextPage: result.nextPage,
+        prevLink: result.prevLink,
+        nextLink: result.nextLink,
       },
     });
   } catch (error) {
