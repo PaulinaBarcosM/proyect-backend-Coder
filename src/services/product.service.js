@@ -37,10 +37,10 @@ export default class ProductsService {
       hasPrevPage: result.hasPrevPage,
       hasNextPage: result.hasNextPage,
       prevLink: result.hasPrevPage
-        ? `/api/products?page=${result.prevPage}&limit=${limit}`
+        ? `/products?page=${result.prevPage}&limit=${limit}`
         : null,
       nextLink: result.hasNextPage
-        ? `/api/products?page=${result.nextPage}&limit=${limit}`
+        ? `/products?page=${result.nextPage}&limit=${limit}`
         : null,
     };
   }

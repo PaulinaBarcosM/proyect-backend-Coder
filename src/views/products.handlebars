@@ -52,12 +52,12 @@
 
 <div class="pagination">
     {{#if pagination.hasPrevPage}}
-    <a href="{{pagination.prevLink}}" class="styled-button">Anterior</a>
+    <a href="{{pagination.prevLink}}">Anterior</a>
     {{/if}}
 
     <span>Pagina {{pagination.page}} de {{pagination.totalPages}}</span>
 
     {{#if pagination.hasNextPage}}
-    <a href="{{pagination.nextLink}}" class="styled-button">Siguiente</a>
+    <a href="{{pagination.nextLink}}">Siguiente</a>
     {{/if}}
 </div>

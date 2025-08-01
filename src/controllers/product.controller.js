@@ -299,6 +299,7 @@ const parseFilters = (req) => {
   return filter;
 };
 
+// Función auxiliar para construir las opciones de paginación
 const getPaginationOptions = (req) => ({
   page: parseInt(req.query.page) || 1,
   limit: parseInt(req.query.limit) || 10,
@@ -311,24 +312,19 @@ const getPaginationOptions = (req) => ({
 //vista con paginación y filtros
 const getProductsView = async (req, res) => {
   try {
-    const { limit = 10, page = 1, sort, category, price, stock } = req.query;
+    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query.page) || 1;
+    const sort = req.query.sort || null;
+    const query = req.query.query || null;
 
-    const query = {};
-    if (category) query.category = category;
-    if (price) query.price = { $lte: price };
-    if (stock) query.stock = { $gte: stock };
-
-    const options = {
-      limit: parseInt(limit),
-      page: parseInt(page),
-      sort: sort ? { price: sort === "asc" ? 1 : -1 } : undefined,
-      lean: true,
-    };
-
-    const result = await productsService.getProducts(query, options);
+    const result = await productsService.getProducts({
+      page,
+      limit,
+      sort,
+      query,
+    });
 
     res.render("products", {
-      layout: "main",
       products: result.docs,
       pagination: {
         totalPages: result.totalPages,
@@ -337,8 +333,12 @@ const getProductsView = async (req, res) => {
         hasNextPage: result.hasNextPage,
         prevPage: result.prevPage,
         nextPage: result.nextPage,
-        prevLink: result.prevLink,
-        nextLink: result.nextLink,
+        prevLink: result.hasPrevPage
+          ? `/products?page=${result.prevPage}`
+          : null,
+        nextLink: result.hasNextPage
+          ? `/products?page=${result.nextPage}`
+          : null,
       },
     });
   } catch (error) {

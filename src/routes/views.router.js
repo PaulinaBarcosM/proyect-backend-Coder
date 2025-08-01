@@ -47,6 +47,9 @@ router.get("/products/view", async (req, res) => {
       sort,
       query,
     });
+
+    const queryString = query ? `&query=${query}` : "";
+
     res.render("products", {
       title: "Lista de Productos",
       products: result.payload,
@@ -57,8 +60,12 @@ router.get("/products/view", async (req, res) => {
         hasNextPage: result.hasNextPage,
         prevPage: result.prevPage,
         nextPage: result.nextPage,
-        prevLink: result.prevLink,
-        nextLink: result.nextLink,
+        prevLink: result.hasPrevPage
+          ? `/views/products?page=${result.prevPage}&limit=${limit}${queryString}`
+          : null,
+        nextLink: result.hasNextPage
+          ? `/views/products?page=${result.nextPage}&limit=${limit}${queryString}`
+          : null,
       },
     });
   } catch (err) {
